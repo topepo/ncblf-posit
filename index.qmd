@@ -25,7 +25,18 @@ options(dplyr.print_min = 6, dplyr.print_max = 6)
 options(cli.width = 85)
 options(crayon.enabled = FALSE)
 options(pillar.advice = FALSE, pillar.min_title_chars = Inf)
+
+library(gt)
 ```
+
+## Who are we? 
+
+Posit (née RStudio) is a [public benefit corporation](https://posit.co/about/pbc-report/) that creates open source and commercial products for data science. 
+
+As of this week, we are 381 people. About 50 people work solely on free open-source projects (about 40% - 50% of engineering). 
+
+We are mostly remote, across almost every continent. HQ is in Boston. 
+
 
 ## Posit's Data Science Menu
 
@@ -39,7 +50,10 @@ We'll look at tooling for a couple of areas:
 
 We'll mostly stick to R stuff but will accentuate a few python tools. 95% of what I'll talk about is free. 
 
-## Data handling and manipulation
+
+# Data handling and manipulation
+
+## Data ingestion
 
 Getting your data in and formatting/manipulating it.
 
@@ -110,8 +124,19 @@ The code on the last slide accentuates how easy it is to code (and read code) wh
 #| echo: true
 raw_data %>% 
   filter(station_id <= 40030 & date <= ymd("2001-01-06")) %>%
-  select(-daytype, -station_id) %>% 
-  pivot_wider(id_cols = c(date), 
+  select(-daytype, -station_id, Date = date) %>% 
+  pivot_wider(id_cols = c(Date), 
+              names_from = stationname, values_from = rides)
+```
+
+```{r}
+#| label: stations
+#| include: false
+three_stations <- 
+  raw_data %>% 
+  filter(station_id <= 40030 & date <= ymd("2001-01-06")) %>%
+  select(-daytype, -station_id, Date = date) %>% 
+  pivot_wider(id_cols = c(Date), 
               names_from = stationname, values_from = rides)
 ```
 
@@ -127,7 +152,9 @@ Besides the tidyverse packages, there are a ton of open-source packages for mani
 
 plus all of the `d{*}plyr` packages...
 
-## Visualization
+# Visualization
+
+## ggplot
 
 We'll, there's [`ggplot2`](https://ggplot2-book.org) and that covers a lot.
 
@@ -139,9 +166,19 @@ Animate your data or plots:
 
 ## plotly
 
-## shiny stuff
+## shiny 
 
-## Data analysis and modeling
+It is is a popular R package and web application framework that makes it easy to tell data stories in interactive point-and-click web applications.
+
+Two big things: 
+
+ - The [visual UI editor](https://rstudio.github.io/shinyuieditor/articles/ui-editor-live-demo.html)
+ - Shiny for [python](https://shiny.rstudio.com/py/)
+
+
+# Data analysis and modeling
+
+## A selection of our modeling tools
 
 There is *a lot* to talk about here:
 
@@ -201,13 +238,88 @@ Overall documentation is at [*MLOps with vetiver*](https://vetiver.rstudio.com).
 knitr::include_graphics("ml_ops_cycle.png")
 ```
 
-## Reporting/Communicating
+# Reporting/Communicating
 
-**Quarto**!!!!
+## **Quarto**!!!!
 
 This is a new publishing system that does all of the things that Rmarkdown does (docs, pages, books, blogs) with a common syntax. 
 
+ - Quarto is not built within R; it works with R, python, Julia, and Observable. 
+ - Can publish to HTML, PDF, Epub, markdown, and so on. 
+ - It encourages interactivity in documents. 
+ - Plenty of examples for documents, websites, books and so on in the [gallery](https://quarto.org/docs/gallery/)
+ 
+## Quarto
+
+If you've used `knitr` and Rmarkdown, you will feel very comfortable with Quarto. 
+
+Code chunks have options _in-line_: 
+
+````
+```{{r}}
+#| label: fig-ggplot
+#| fig-cap: !expr ggplot_cap
+#| fig-width: 6
+#| fig-height: 4.25
+#| out-width: 70%
+
+mtcars %>% ggplot(aes(disp, mpg)) + geom_point()
+```
+````
+
+## The gt package
+
+People seem to _loooove_ tools for making tables in documents. 
+
+The [`gt`](https://gt.rstudio.com) package is a nice addition to set of table packages. 
+
+```{r}
+#| label: gt-code
+#| eval: false
+library(gt)
+three_stations %>% 
+  gt() %>% 
+  tab_header(
+    title = "Chicago Train Ridership",
+  ) %>%
+  tab_spanner(
+    label = "Riders/Day",
+    columns = c(-Date)
+  )
+```
+
+## 
+
+```{r}
+#| label: gt-res
+#| echo: false
+library(gt) 
+three_stations %>% 
+  gt() %>% 
+  tab_header(
+    title = "Chicago Train Ridership",
+  ) %>%
+  tab_spanner(
+    label = "Riders/Day",
+    columns = c(-Date)
+  )
+```
+
+
+# Potpourri
+
+## webR
+
+This is a good example of how we are often competing with ourselves. 
+
+webR is a tool that will compile R into machine readable code and embed it in a website. 
+
+All of the resources are from your local machine. [Let's play!](https://webr.r-wasm.org/latest/)
 
 
 
-## Potpourri
+Good summaries: 
+
+ - ["webR 0.1.0 has been released"](https://www.tidyverse.org/blog/2023/03/webr-0-1-0/)
+ - ["How to run R code in the browser with webR"](https://blog.djnavarro.net/posts/2023-04-09_webr/)
+ - ["WebR: R compiled for WebAssembly and running in the browser"](https://www.rstudio.com/conference/2022/talks/webr-r-compiled-for-webassembly/)
