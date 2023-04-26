@@ -1,0 +1,213 @@
+---
+title: "~~RStudio~~ Posit Tools for Data Science"
+format:
+  revealjs: 
+    slide-number: true
+    footer: <https://workshops.tidymodels.org>
+    include-before-body: header.html
+    include-after-body: footer-annotations.html
+    theme: [default, tidymodels.scss]
+    width: 1280
+    height: 720
+knitr:
+  opts_chunk: 
+    echo: true
+    collapse: true
+    comment: "#>"
+---
+
+```{r}
+#| label: startup
+#| include: false
+
+options(digits = 4, width = 85)
+options(dplyr.print_min = 6, dplyr.print_max = 6)
+options(cli.width = 85)
+options(crayon.enabled = FALSE)
+options(pillar.advice = FALSE, pillar.min_title_chars = Inf)
+```
+
+## Posit's Data Science Menu
+
+We'll look at tooling for a couple of areas:
+
+-   Data handling and manipulation
+-   Visualization
+-   Data analysis and modeling
+-   Reporting
+-   Potpourri for \$500
+
+We'll mostly stick to R stuff but will accentuate a few python tools. 95% of what I'll talk about is free. 
+
+## Data handling and manipulation
+
+Getting your data in and formatting/manipulating it.
+
+Data ingestion (not posit):
+
+-   [`arrow`](https://arrow.apache.org/docs/r/): Read arrow files
+-   [`sas7bdat`](https://cran.r-project.org/web/packages/sas7bdat/index.html): Read SAS files
+-   R has a very rich set of data base tools (see the [Task Vew](https://cran.r-project.org/web/views/Databases.html))
+-   [`duckdb`](https://github.com/duckdb/duckdb): DuckDB Database Management System
+
+## Posit data ingestion
+
+-   [`readr`](https://readr.tidyverse.org): Read excel files (.xls and .xlsx) into R
+-   [`vroom`](https://vroom.r-lib.org/): Fast reading of delimited files
+-   [`googlesheets4`](https://googlesheets4.tidyverse.org): Google Spreadsheets R AP
+-   [`haven`](https://haven.tidyverse.org): Read SPSS, Stata and SAS files from R
+-   [`rvest`](https://rvest.tidyverse.org): Simple web scraping for R
+
+## Example code - tidyverse
+
+```{r}
+#| label: tv-load
+#| message: true
+library(tidyverse)
+```
+
+Not familiar with the tidyverse? Your best resource to learn is [*R for Data Science*](https://r4ds.hadley.nz).
+
+## Reading in csv data
+
+`Entries.csv` a 30mb file of daily train data:
+
+```{r}
+#| label: train-read
+#| echo: true
+
+system.time(raw_data <- read_csv("Entries.csv"))
+```
+
+## What's in that data set?
+
+```{r}
+#| label: train-str
+#| echo: true
+
+glimpse(raw_data)
+```
+
+Hmm. Let's get real dates
+
+```{r}
+#| label: dates
+#| echo: true
+
+raw_data <- 
+  raw_data %>% 
+  mutate(date = mdy(date))
+
+class(raw_data$date)
+```
+
+## tidyverse and data manipluations
+
+The code on the last slide accentuates how easy it is to code (and read code) when you need to do several things when using the pipe operator.
+
+```{r}
+#| label: pipes
+#| echo: true
+raw_data %>% 
+  filter(station_id <= 40030 & date <= ymd("2001-01-06")) %>%
+  select(-daytype, -station_id) %>% 
+  pivot_wider(id_cols = c(date), 
+              names_from = stationname, values_from = rides)
+```
+
+## Data manipluation
+
+Besides the tidyverse packages, there are a ton of open-source packages for manipulating data
+
+-   [`glue`](https://glue.tidyverse.org): Glue strings to data in R. Small, fast, dependency free
+-   [`forcats`](https://forcats.tidyverse.org/): Tools for working with categorical variables
+-   [`fs`](hhttps://fs.r-lib.org/): Provide cross platform file operations
+-   [`clock`](https://clock.r-lib.org/): A Date-Time Library for R
+-   [`sparklyr`](https://spark.rstudio.com): R interface to Apache Spark
+
+plus all of the `d{*}plyr` packages...
+
+## Visualization
+
+We'll, there's [`ggplot2`](https://ggplot2-book.org) and that covers a lot.
+
+Some lesser known packages and tools...
+
+## ggaminate
+
+Animate your data or plots:
+
+## plotly
+
+## shiny stuff
+
+## Data analysis and modeling
+
+There is *a lot* to talk about here:
+
+-   tidymodels
+-   keras
+-   torch
+-   vetiver
+
+## tidymodels
+
+... is a framework for statistical and machine learning models using tidyverse syntax.
+
+Basically caret on steroids. Can also access the [`h2o`](https://h2o.ai) modeling framework. 
+
+If you want more details:
+
+-   [RStudio conference keynote](https://www.rstudio.com/conference/2022/keynotes/applied-machine-learning/)
+-   [tidymodels.org](https://www.tidymodels.org)
+-   [*Tidy Modeling with R* book](https://www.tmwr.org)
+
+## tensorflow/keras
+
+(Mostly just called "tensorflow" now) These are deep learning libraries in python. 
+
+There are a lot of tensorflow related R packages that access the *python* machine learning functionality (just like it does for C, java, etc).
+
+An excellent R package called [`reticulate`](https://rstudio.github.io/reticulate/) provides the means to access all of python via R.
+
+To get started, see the [tensorflow website](https://tensorflow.rstudio.com).
+
+## torch
+
+Another machine leaning library.
+
+-   Rather than using python as an intermediary, it bundles the C++ files in the R package.
+
+It can be used as an additional computing environment within R.
+
+Some places to get more information:
+
+-   [`brulee`](https://brulee.tidymodels.org) is an R package that has basic model implementations via torch.
+-   the `torch` [package website](https://torch.mlverse.org)
+-   [*Deep Learning and Scientific Computing with R torch* book](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/) (new!)
+
+## Vetiver
+
+vetiver has [R](https://rstudio.github.io/vetiver-r/) and [python](https://rstudio.github.io/vetiver-python/stable/) implementations that enable simple deployment of models.
+
+Overall documentation is at [*MLOps with vetiver*](https://vetiver.rstudio.com).
+
+```{r}
+#| label: vetiver
+#| echo: false
+#| fig-align: center
+#| out-width: 50%
+
+knitr::include_graphics("ml_ops_cycle.png")
+```
+
+## Reporting/Communicating
+
+**Quarto**!!!!
+
+This is a new publishing system that does all of the things that Rmarkdown does (docs, pages, books, blogs) with a common syntax. 
+
+
+
+
+## Potpourri

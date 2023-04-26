@@ -1,0 +1,25 @@
+project:
+  type: website
+  render:
+    - "index.qmd"
+  output-dir: docs
+
+website:
+  title: "Posit Tools for Data Science"
+  open-graph: true
+  twitter-card: true
+  site-url: https://workshops.tidymodels.org
+  repo-url: https://github.com/tidymodels/workshops
+  repo-actions: [edit, issue]
+  favicon: "favicon.ico"
+  page-footer:
+    left: |
+      Proudly supported by
+      [![](https://www.rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-flat.svg){fig-alt="RStudio" width=65px}](https://www.rstudio.com)
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+
+fig-format: svg
