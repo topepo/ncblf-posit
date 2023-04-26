@@ -3,7 +3,7 @@ title: "~~RStudio~~ Posit Tools for Data Science"
 format:
   revealjs: 
     slide-number: true
-    footer: <https://workshops.tidymodels.org>
+    footer: <https://topepo.github.io/ncblf-posit>
     include-before-body: header.html
     include-after-body: footer-annotations.html
     theme: [default, tidymodels.scss]
@@ -48,7 +48,7 @@ We'll look at tooling for a couple of areas:
 -   Reporting
 -   Potpourri for \$500
 
-We'll mostly stick to R stuff but will accentuate a few python tools. 95% of what I'll talk about is free. 
+We'll mostly stick to R stuff but will accentuate a few python tools. 99% of what I'll talk about is free. 
 
 
 # Data handling and manipulation
@@ -199,6 +199,27 @@ If you want more details:
 -   [tidymodels.org](https://www.tidymodels.org)
 -   [*Tidy Modeling with R* book](https://www.tmwr.org)
 
+## Preparing your data using recipes
+
+The `recipes` package helps prepare your data prior to modeling. 
+
+You can think of it as a better version of `model.matrix()` crossed with `dplyr`. 
+
+Here's a hypothetical example: 
+
+```r
+rec <- 
+  recipe(outcome ~ ., data = data_set) %>% 
+  step_mutate(log_outcome = log10(outcome)) %>% 
+  step_other(starts_with("zip"), threshold = 1 / 100) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_zv(all_predictors()) %>% 
+  step_normalize(all_numeric_predictors()) %>% 
+  step_pca(all_numeric_predictors(), num_comp = 10)
+
+```
+
+
 ## tensorflow/keras
 
 (Mostly just called "tensorflow" now) These are deep learning libraries in python. 
@@ -315,7 +336,6 @@ This is a good example of how we are often competing with ourselves.
 webR is a tool that will compile R into machine readable code and embed it in a website. 
 
 All of the resources are from your local machine. [Let's play!](https://webr.r-wasm.org/latest/)
-
 
 
 Good summaries: 

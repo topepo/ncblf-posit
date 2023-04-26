@@ -6,12 +6,8 @@ project:
 
 website:
   title: "Posit Tools for Data Science"
-  open-graph: true
-  twitter-card: true
-  site-url: https://workshops.tidymodels.org
-  repo-url: https://github.com/tidymodels/workshops
-  repo-actions: [edit, issue]
-  favicon: "favicon.ico"
+  site-url: https://topepo.github.io/ncblf-posit
+  repo-url: https://github.com/topepo/ncblf-posit
   page-footer:
     left: |
       Proudly supported by
