@@ -1,0 +1,163 @@
+[
+  {
+    "objectID": "index.html#who-are-we",
+    "href": "index.html#who-are-we",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Who are we?",
+    "text": "Who are we?\nPosit (née RStudio) is a public benefit corporation that creates open source and commercial products for data science.\nAs of this week, we are 381 people. About 50 people work solely on free open-source projects (about 40% - 50% of engineering).\nWe are mostly remote, across almost every continent. HQ is in Boston."
+  },
+  {
+    "objectID": "index.html#posits-data-science-menu",
+    "href": "index.html#posits-data-science-menu",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Posit’s Data Science Menu",
+    "text": "Posit’s Data Science Menu\nWe’ll look at tooling for a couple of areas:\n\nData handling and manipulation\nVisualization\nData analysis and modeling\nReporting\nPotpourri for $500\n\nWe’ll mostly stick to R stuff but will accentuate a few python tools. 99% of what I’ll talk about is free."
+  },
+  {
+    "objectID": "index.html#data-ingestion",
+    "href": "index.html#data-ingestion",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Data ingestion",
+    "text": "Data ingestion\nGetting your data in and formatting/manipulating it.\nNon-posit:\n\narrow: Read arrow files\nsas7bdat: Read SAS files\nR has a very rich set of data base tools (see the Task Vew)\nduckdb: DuckDB Database Management System\nforeign Reads in data from SAS, SPSS, etc."
+  },
+  {
+    "objectID": "index.html#posit-data-ingestion",
+    "href": "index.html#posit-data-ingestion",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Posit data ingestion",
+    "text": "Posit data ingestion\n\nreadr: Read excel files (.xls and .xlsx) into R\nvroom: Fast reading of delimited files\ngooglesheets4: Google Spreadsheets R AP\nhaven: Read SPSS, Stata and SAS files from R\nrvest: Simple web scraping for R"
+  },
+  {
+    "objectID": "index.html#example-code---tidyverse",
+    "href": "index.html#example-code---tidyverse",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Example code - tidyverse",
+    "text": "Example code - tidyverse\n\nlibrary(tidyverse)\n#> ── Attaching core tidyverse packages ───────────────────────────── tidyverse 2.0.0 ──\n#> ✔ dplyr     1.1.1     ✔ readr     2.1.4\n#> ✔ forcats   1.0.0     ✔ stringr   1.5.0\n#> ✔ ggplot2   3.4.2     ✔ tibble    3.2.1\n#> ✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n#> ✔ purrr     1.0.1     \n#> ── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──\n#> ✖ dplyr::filter() masks stats::filter()\n#> ✖ dplyr::lag()    masks stats::lag()\n#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors\n\nNot familiar with the tidyverse? Your best resource to learn is R for Data Science."
+  },
+  {
+    "objectID": "index.html#reading-in-csv-data",
+    "href": "index.html#reading-in-csv-data",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Reading in csv data",
+    "text": "Reading in csv data\nEntries.csv a 30mb file of daily train data:\n\nsystem.time(raw_data <- read_csv(\"Entries.csv\"))\n#>    user  system elapsed \n#>   1.369   0.025   0.331"
+  },
+  {
+    "objectID": "index.html#whats-in-that-data-set",
+    "href": "index.html#whats-in-that-data-set",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "What’s in that data set?",
+    "text": "What’s in that data set?\n\nglimpse(raw_data)\n#> Rows: 826,894\n#> Columns: 5\n#> $ station_id  <dbl> 40010, 40020, 40030, 40040, 40050, 40060, 40070, 40080, 40090, …\n#> $ stationname <chr> \"Austin-Forest Park\", \"Harlem-Lake\", \"Pulaski-Lake\", \"Quincy/We…\n#> $ date        <chr> \"01/01/2001\", \"01/01/2001\", \"01/01/2001\", \"01/01/2001\", \"01/01/…\n#> $ daytype     <chr> \"U\", \"U\", \"U\", \"U\", \"U\", \"U\", \"U\", \"U\", \"U\", \"U\", \"U\", \"U\", \"U\"…\n#> $ rides       <dbl> 290, 633, 483, 374, 804, 1165, 649, 1116, 411, 1698, 318, 364, …\n\nHmm. Let’s make the dates actual dates:\n\nraw_data <- \n  raw_data %>% \n  mutate(date = mdy(date))\n\nclass(raw_data$date)\n#> [1] \"Date\""
+  },
+  {
+    "objectID": "index.html#tidyverse-and-data-manipulations",
+    "href": "index.html#tidyverse-and-data-manipulations",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "tidyverse and data manipulations",
+    "text": "tidyverse and data manipulations\nThe code on the last slide accentuates how easy it is to code (and read code) when you need to do several things when using the pipe operator.\n\nraw_data %>% \n  filter(station_id <= 40030 & date <= ymd(\"2001-01-06\")) %>%\n  select(-daytype, -station_id, Date = date) %>% \n  pivot_wider(id_cols = Date, names_from = stationname, values_from = rides)\n#> # A tibble: 6 × 4\n#>   Date       `Austin-Forest Park` `Harlem-Lake` `Pulaski-Lake`\n#>   <date>                    <dbl>         <dbl>          <dbl>\n#> 1 2001-01-01                  290           633            483\n#> 2 2001-01-02                 1240          2950           1230\n#> 3 2001-01-03                 1412          3107           1394\n#> 4 2001-01-04                 1388          3259           1370\n#> 5 2001-01-05                 1465          3357           1453\n#> 6 2001-01-06                  613          1569            839"
+  },
+  {
+    "objectID": "index.html#data-manipulation",
+    "href": "index.html#data-manipulation",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Data manipulation",
+    "text": "Data manipulation\nBesides the tidyverse packages, there are a ton of open-source packages for manipulating data\n\nglue: Glue strings to data in R. Small, fast, dependency free\nforcats: Tools for working with categorical variables\nfs: Provide cross platform file operations\nclock: A Date-Time Library for R\nsparklyr: R interface to Apache Spark\n\nplus all of the d{*}plyr packages…"
+  },
+  {
+    "objectID": "index.html#gg-and-others",
+    "href": "index.html#gg-and-others",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "gg{*} and others",
+    "text": "gg{*} and others\nWe’ll, there’s ggplot2 and that covers a lot. Some lesser known packages and tools…\n\nggaminate non-interactive animations (e.g. gif, mp4) (example)\nplotly interactive plots, can convert ggplots (example)\n\nNot really ggplot:\n\nleaflet interactive maps (example)\nflexdashboard easy interactive dashboards for R\nr2d3 interface to D3 Visualizations (best hex too)"
+  },
+  {
+    "objectID": "index.html#shiny",
+    "href": "index.html#shiny",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "shiny",
+    "text": "shiny\nIt is is a popular R package and web application framework that makes it easy to tell data stories in interactive point-and-click web applications.\nTwo big things that are works-in-progress:\n\nThe visual UI editor\nShiny for python"
+  },
+  {
+    "objectID": "index.html#a-selection-of-our-modeling-tools",
+    "href": "index.html#a-selection-of-our-modeling-tools",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "A selection of our modeling tools",
+    "text": "A selection of our modeling tools\nThere is a lot to talk about here:\n\ntidymodels\nkeras\ntorch\nvetiver"
+  },
+  {
+    "objectID": "index.html#tidymodels",
+    "href": "index.html#tidymodels",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "tidymodels",
+    "text": "tidymodels\n… is a framework for statistical and machine learning models using tidyverse syntax.\nBasically caret on steroids. Can also access the h2o modeling framework.\nIf you want more details:\n\nRStudio conference keynote\ntidymodels.org\nTidy Modeling with R book"
+  },
+  {
+    "objectID": "index.html#preparing-your-data-using-recipes",
+    "href": "index.html#preparing-your-data-using-recipes",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Preparing your data using recipes",
+    "text": "Preparing your data using recipes\nThe recipes package helps prepare your data prior to modeling.\nYou can think of it as a better version of model.matrix() crossed with dplyr.\nHere’s a hypothetical example:\nrec <- \n  recipe(outcome ~ ., data = data_set) %>% \n  step_mutate(log_x1 = log10(x1)) %>% \n  step_rm(x1) %>% \n  step_other(starts_with(\"zip\"), threshold = 1 / 100) %>% \n  step_dummy(all_nominal_predictors()) %>% \n  step_zv(all_predictors()) %>% \n  step_normalize(all_numeric_predictors()) %>% \n  step_pca(all_numeric_predictors(), num_comp = 10)  # or num_comp = tune()"
+  },
+  {
+    "objectID": "index.html#tensorflowkeras",
+    "href": "index.html#tensorflowkeras",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "tensorflow/keras",
+    "text": "tensorflow/keras\n(Mostly just called “tensorflow” now)\nThese are deep learning libraries in python.\nThere are a lot of tensorflow related R packages that access the python machine learning functionality (just like it does for C, java, etc).\n\nAn excellent R package called reticulate provides the means to access all of python via R.\n\nTo get started, see the tensorflow website and the R version of Chollet’s deep learning book"
+  },
+  {
+    "objectID": "index.html#torch",
+    "href": "index.html#torch",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "torch",
+    "text": "torch\nAnother machine learning library.\n\nRather than using python as an intermediary, it bundles the C++ files in the R package.\n\nIt can be used as an additional computing environment within R.\nSome places to get more information:\n\nthe torch package website\nDeep Learning and Scientific Computing with R torch book (new!)\nbrulee is an R package that has basic model implementations via torch."
+  },
+  {
+    "objectID": "index.html#vetiver",
+    "href": "index.html#vetiver",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Vetiver",
+    "text": "Vetiver\nvetiver has R and python implementations that enable simple versioning and deployment of models.\nOverall documentation is at MLOps with vetiver."
+  },
+  {
+    "objectID": "index.html#quarto",
+    "href": "index.html#quarto",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Quarto!!!!",
+    "text": "Quarto!!!!\nThis is a new publishing system that does all of the things that Rmarkdown does (docs, pages, books, blogs) with a common syntax.\n\nQuarto is not built within R; it works with R, python, Julia, and Observable.\nCan publish to HTML, PDF, Epub, markdown, Confluence, and so on.\nIt encourages interactivity in documents.\nPlenty of examples for documents, websites, books and so on in the gallery"
+  },
+  {
+    "objectID": "index.html#quarto-1",
+    "href": "index.html#quarto-1",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Quarto",
+    "text": "Quarto\nIf you’ve used knitr and Rmarkdown, you will feel very comfortable with Quarto.\nCode chunks have options in-line:\n```{r}\n#| label: fig-ggplot\n#| fig-cap: !expr ggplot_caption_object\n#| fig-width: 6\n#| fig-height: 4.25\n#| out-width: 70%\n\nmtcars %>% ggplot(aes(disp, mpg)) + geom_point()\n```"
+  },
+  {
+    "objectID": "index.html#the-gt-package",
+    "href": "index.html#the-gt-package",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "The gt package",
+    "text": "The gt package\nPeople seem to loooove tools for making tables in documents.\nThe gt package is a nice addition to set of table packages.\n\nlibrary(gt)\nthree_stations %>% \n  gt() %>% \n  tab_header(\n    title = \"Chicago Train Ridership\",\n  ) %>%\n  tab_spanner(\n    label = \"Riders/Day\",\n    columns = c(-Date)\n  )"
+  },
+  {
+    "objectID": "index.html#section",
+    "href": "index.html#section",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "",
+    "text": "Chicago Train Ridership\n    \n    \n  \n  \n    \n      Date\n      \n        Riders/Day\n      \n    \n    \n      Austin-Forest Park\n      Harlem-Lake\n      Pulaski-Lake\n    \n  \n  \n    2001-01-01\n290\n633\n483\n    2001-01-02\n1240\n2950\n1230\n    2001-01-03\n1412\n3107\n1394\n    2001-01-04\n1388\n3259\n1370\n    2001-01-05\n1465\n3357\n1453\n    2001-01-06\n613\n1569\n839"
+  },
+  {
+    "objectID": "index.html#posit-workbench-and-connect",
+    "href": "index.html#posit-workbench-and-connect",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Posit Workbench and Connect 💵",
+    "text": "Posit Workbench and Connect 💵"
+  },
+  {
+    "objectID": "index.html#webr",
+    "href": "index.html#webr",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "webR",
+    "text": "webR\nThis is a good example of how we are often competing with ourselves.\nwebR is a tool that will compile R into machine readable code and embed it in a website.\nAll of the resources are from your local machine. Let’s play!\nGood summaries:\n\n“webR 0.1.0 has been released”\n“How to run R code in the browser with webR”\n“WebR: R compiled for WebAssembly and running in the browser”\n\n\n\nhttps://topepo.github.io/ncblf-posit"
+  }
+]
