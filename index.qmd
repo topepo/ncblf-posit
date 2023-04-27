@@ -117,7 +117,7 @@ raw_data <-
 class(raw_data$date)
 ```
 
-## tidyverse and data manipluations
+## tidyverse and data manipulations
 
 The code on the last slide accentuates how easy it is to code (and read code) when you need to do several things when using the pipe operator.
 
@@ -141,7 +141,7 @@ three_stations <-
               names_from = stationname, values_from = rides)
 ```
 
-## Data manipluation
+## Data manipulation
 
 Besides the tidyverse packages, there are a ton of open-source packages for manipulating data
 
@@ -237,7 +237,7 @@ To get started, see the [tensorflow website](https://tensorflow.rstudio.com) and
 
 ## torch
 
-Another machine leaning library.
+Another machine learning library.
 
 -   Rather than using python as an intermediary, it bundles the C++ files in the R package.
 
