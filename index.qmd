@@ -50,6 +50,7 @@ We'll look at tooling for a couple of areas:
 
 We'll mostly stick to R stuff but will accentuate a few python tools. 99% of what I'll talk about is free. 
 
+# The IDE (aka "RStudio")
 
 # Data handling and manipulation
 
@@ -57,12 +58,13 @@ We'll mostly stick to R stuff but will accentuate a few python tools. 99% of wha
 
 Getting your data in and formatting/manipulating it.
 
-Data ingestion (not posit):
+Non-posit:
 
 -   [`arrow`](https://arrow.apache.org/docs/r/): Read arrow files
 -   [`sas7bdat`](https://cran.r-project.org/web/packages/sas7bdat/index.html): Read SAS files
 -   R has a very rich set of data base tools (see the [Task Vew](https://cran.r-project.org/web/views/Databases.html))
 -   [`duckdb`](https://github.com/duckdb/duckdb): DuckDB Database Management System
+-   [`foreign`](https://cran.r-project.org/web/packages/foreign/index.html) Reads in data from SAS, SPSS, etc.
 
 ## Posit data ingestion
 
@@ -102,7 +104,7 @@ system.time(raw_data <- read_csv("Entries.csv"))
 glimpse(raw_data)
 ```
 
-Hmm. Let's get real dates
+Hmm. Let's make the dates actual dates:
 
 ```{r}
 #| label: dates
@@ -125,8 +127,7 @@ The code on the last slide accentuates how easy it is to code (and read code) wh
 raw_data %>% 
   filter(station_id <= 40030 & date <= ymd("2001-01-06")) %>%
   select(-daytype, -station_id, Date = date) %>% 
-  pivot_wider(id_cols = c(Date), 
-              names_from = stationname, values_from = rides)
+  pivot_wider(id_cols = Date, names_from = stationname, values_from = rides)
 ```
 
 ```{r}
@@ -154,23 +155,25 @@ plus all of the `d{*}plyr` packages...
 
 # Visualization
 
-## ggplot
+## `gg{*}` and others
 
-We'll, there's [`ggplot2`](https://ggplot2-book.org) and that covers a lot.
+We'll, there's [`ggplot2`](https://ggplot2-book.org) and that covers a lot. Some lesser known packages and tools...
 
-Some lesser known packages and tools...
+* [`ggaminate`](https://gganimate.com) non-interactive animations (e.g. gif, mp4) [(example)](https://www.tmwr.org/sa_search.mp4)
+* [`plotly`](https://plotly-r.com) interactive plots, can convert ggplots [(example)](https://bookdown.org/max/FES/text-data.html#fig:categorical-volcano)
 
-## ggaminate
+Not really ggplot: 
 
-Animate your data or plots:
+* [`leaflet`](https://rstudio.github.io/leaflet/) interactive maps [(example)](https://bookdown.org/max/FES/numeric-many-to-many.html#fig:numeric-pc2-map-html)
+* [`flexdashboard`](https://pkgs.rstudio.com/flexdashboard/) easy interactive dashboards for R
+* [`r2d3`](https://rstudio.github.io/r2d3) interface to D3 Visualizations (best hex too)
 
-## plotly
 
 ## shiny 
 
 It is is a popular R package and web application framework that makes it easy to tell data stories in interactive point-and-click web applications.
 
-Two big things: 
+Two big things that are works-in-progress: 
 
  - The [visual UI editor](https://rstudio.github.io/shinyuieditor/articles/ui-editor-live-demo.html)
  - Shiny for [python](https://shiny.rstudio.com/py/)
@@ -191,7 +194,7 @@ There is *a lot* to talk about here:
 
 ... is a framework for statistical and machine learning models using tidyverse syntax.
 
-Basically caret on steroids. Can also access the [`h2o`](https://h2o.ai) modeling framework. 
+Basically [`caret`](https://topepo.github.io/caret) on steroids. Can also access the [`h2o`](https://h2o.ai) modeling framework. 
 
 If you want more details:
 
@@ -210,25 +213,27 @@ Here's a hypothetical example:
 ```r
 rec <- 
   recipe(outcome ~ ., data = data_set) %>% 
-  step_mutate(log_outcome = log10(outcome)) %>% 
+  step_mutate(log_x1 = log10(x1)) %>% 
+  step_rm(x1) %>% 
   step_other(starts_with("zip"), threshold = 1 / 100) %>% 
   step_dummy(all_nominal_predictors()) %>% 
   step_zv(all_predictors()) %>% 
   step_normalize(all_numeric_predictors()) %>% 
-  step_pca(all_numeric_predictors(), num_comp = 10)
-
+  step_pca(all_numeric_predictors(), num_comp = 10)  # or num_comp = tune()
 ```
 
 
 ## tensorflow/keras
 
-(Mostly just called "tensorflow" now) These are deep learning libraries in python. 
+(Mostly just called "tensorflow" now) 
+
+These are deep learning libraries in python. 
 
 There are a lot of tensorflow related R packages that access the *python* machine learning functionality (just like it does for C, java, etc).
 
-An excellent R package called [`reticulate`](https://rstudio.github.io/reticulate/) provides the means to access all of python via R.
+ - An excellent R package called [`reticulate`](https://rstudio.github.io/reticulate/) provides the means to access all of python via R.
 
-To get started, see the [tensorflow website](https://tensorflow.rstudio.com).
+To get started, see the [tensorflow website](https://tensorflow.rstudio.com) and the R version of Chollet's [deep learning book](https://www.manning.com/books/deep-learning-with-r-second-edition)
 
 ## torch
 
@@ -240,13 +245,13 @@ It can be used as an additional computing environment within R.
 
 Some places to get more information:
 
--   [`brulee`](https://brulee.tidymodels.org) is an R package that has basic model implementations via torch.
 -   the `torch` [package website](https://torch.mlverse.org)
 -   [*Deep Learning and Scientific Computing with R torch* book](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/) (new!)
+-   [`brulee`](https://brulee.tidymodels.org) is an R package that has basic model implementations via torch.
 
 ## Vetiver
 
-vetiver has [R](https://rstudio.github.io/vetiver-r/) and [python](https://rstudio.github.io/vetiver-python/stable/) implementations that enable simple deployment of models.
+vetiver has [R](https://rstudio.github.io/vetiver-r/) and [python](https://rstudio.github.io/vetiver-python/stable/) implementations that enable simple versioning and deployment of models.
 
 Overall documentation is at [*MLOps with vetiver*](https://vetiver.rstudio.com).
 
@@ -266,7 +271,7 @@ knitr::include_graphics("ml_ops_cycle.png")
 This is a new publishing system that does all of the things that Rmarkdown does (docs, pages, books, blogs) with a common syntax. 
 
  - Quarto is not built within R; it works with R, python, Julia, and Observable. 
- - Can publish to HTML, PDF, Epub, markdown, and so on. 
+ - Can publish to HTML, PDF, Epub, markdown, _Confluence_, and so on. 
  - It encourages interactivity in documents. 
  - Plenty of examples for documents, websites, books and so on in the [gallery](https://quarto.org/docs/gallery/)
  
@@ -279,7 +284,7 @@ Code chunks have options _in-line_:
 ````
 ```{{r}}
 #| label: fig-ggplot
-#| fig-cap: !expr ggplot_cap
+#| fig-cap: !expr ggplot_caption_object
 #| fig-width: 6
 #| fig-height: 4.25
 #| out-width: 70%
@@ -325,6 +330,19 @@ three_stations %>%
     columns = c(-Date)
   )
 ```
+
+
+## Posit Workbench and Connect `r emo::ji("dollar")`
+
+```{r}
+#| label: rsc
+#| echo: false
+#| fig-align: center
+#| out-width: 80%
+
+knitr::include_graphics("solutions.png")
+```
+
 
 
 # Potpourri
