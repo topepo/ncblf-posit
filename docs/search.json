@@ -39,7 +39,7 @@
     "href": "index.html#reading-in-csv-data",
     "title": "RStudio Posit Tools for Data Science",
     "section": "Reading in csv data",
-    "text": "Reading in csv data\nEntries.csv a 30mb file of daily train data:\n\nsystem.time(raw_data <- read_csv(\"Entries.csv\"))\n#>    user  system elapsed \n#>   1.369   0.025   0.331"
+    "text": "Reading in csv data\nEntries.csv a 30mb file of daily train data:\n\nsystem.time(raw_data <- read_csv(\"Entries.csv\"))\n#>    user  system elapsed \n#>   1.226   0.028   0.325"
   },
   {
     "objectID": "index.html#whats-in-that-data-set",
@@ -102,7 +102,7 @@
     "href": "index.html#tensorflowkeras",
     "title": "RStudio Posit Tools for Data Science",
     "section": "tensorflow/keras",
-    "text": "tensorflow/keras\n(Mostly just called “tensorflow” now)\nThese are deep learning libraries in python.\nThere are a lot of tensorflow related R packages that access the python machine learning functionality (just like it does for C, java, etc).\n\nAn excellent R package called reticulate provides the means to access all of python via R.\n\nTo get started, see the tensorflow website and the R version of Chollet’s deep learning book"
+    "text": "tensorflow/keras\n(Mostly just called “tensorflow” now)\nThese are deep learning libraries in python.\nThere are a lot of tensorflow-related R packages that access the python machine learning functionality (just like it does for C, java, etc).\n\nAn excellent R package called reticulate provides the means to access all of python via R.\n\nTo get started, see the tensorflow website and the R version of Chollet’s deep learning book"
   },
   {
     "objectID": "index.html#torch",
@@ -158,6 +158,13 @@
     "href": "index.html#webr",
     "title": "RStudio Posit Tools for Data Science",
     "section": "webR",
-    "text": "webR\nThis is a good example of how we are often competing with ourselves.\nwebR is a tool that will compile R into machine readable code and embed it in a website.\nAll of the resources are from your local machine. Let’s play!\nGood summaries:\n\n“webR 0.1.0 has been released”\n“How to run R code in the browser with webR”\n“WebR: R compiled for WebAssembly and running in the browser”\n\n\n\nhttps://topepo.github.io/ncblf-posit"
+    "text": "webR\nThis is a good example of how we are often competing with ourselves.\nwebR is a tool that will compile R into machine-readable code and embed it in a website.\nAll of the resources are from your local machine. Let’s play!\nGood summaries:\n\n“webR 0.1.0 has been released”\n“How to run R code in the browser with webR”\n“WebR: R compiled for WebAssembly and running in the browser”"
+  },
+  {
+    "objectID": "index.html#getting-more-information",
+    "href": "index.html#getting-more-information",
+    "title": "RStudio Posit Tools for Data Science",
+    "section": "Getting more information",
+    "text": "Getting more information\nYou can always contact me (max@posit.co) or Phil Bowsher (phil@posit.co)\n\n\nhttps://topepo.github.io/ncblf-posit"
   }
 ]

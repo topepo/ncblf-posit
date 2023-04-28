@@ -229,7 +229,7 @@ rec <-
 
 These are deep learning libraries in python. 
 
-There are a lot of tensorflow related R packages that access the *python* machine learning functionality (just like it does for C, java, etc).
+There are a lot of tensorflow-related R packages that access the *python* machine learning functionality (just like it does for C, java, etc).
 
  - An excellent R package called [`reticulate`](https://rstudio.github.io/reticulate/) provides the means to access all of python via R.
 
@@ -351,7 +351,7 @@ knitr::include_graphics("solutions.png")
 
 This is a good example of how we are often competing with ourselves. 
 
-webR is a tool that will compile R into machine readable code and embed it in a website. 
+webR is a tool that will compile R into machine-readable code and embed it in a website. 
 
 All of the resources are from your local machine. [Let's play!](https://webr.r-wasm.org/latest/)
 
@@ -361,3 +361,8 @@ Good summaries:
  - ["webR 0.1.0 has been released"](https://www.tidyverse.org/blog/2023/03/webr-0-1-0/)
  - ["How to run R code in the browser with webR"](https://blog.djnavarro.net/posts/2023-04-09_webr/)
  - ["WebR: R compiled for WebAssembly and running in the browser"](https://www.rstudio.com/conference/2022/talks/webr-r-compiled-for-webassembly/)
+ 
+## Getting more information
+
+You can always contact me (`max@posit.co`) or Phil Bowsher (`phil@posit.co`)
+
